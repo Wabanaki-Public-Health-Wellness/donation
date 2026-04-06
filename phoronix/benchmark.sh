@@ -9,38 +9,39 @@ GREEN="\e[32m"
 BLUE="\e[34m"
 BOLD="\e[1m"
 RESET="\e[0m"
+LOGPATH="/tmp/benchmark.log"
 
-echo -e "${BLUE}${BOLD}Script is running, logs can be found in /tmp/benchmark.log ${RESET}"
+echo -e "${BLUE}${BOLD}Script is running, logs can be found in $LOGPATH ${RESET}"
 #
 echo -e "${BOLD}Running multi-core CPU test...${RESET}"
-phoronix-test-suite batch-benchmark stress-ng <<EOF > /tmp/benchmark.log
+phoronix-test-suite batch-benchmark stress-ng <<EOF > $LOGPATH
 1
 EOF
-# May grep the average value and display it
-#echo -e "${BOLD}Running multi-core CPU test...${RESET}"
-#phoronix-test-suite benchmark stress-ng >> /tmp/benchmark.log
 
 #
 echo -e "${BOLD}Running RAM test...${RESET}"
-phoronix-test-suite batch-benchmark mbw <<EOF >> /tmp/benchmark.log
+phoronix-test-suite batch-benchmark mbw <<EOF >> $LOGPATH
 1
 4
 EOF
-# May grep the average value and display it
-
-#
-echo -e "${BOLD}Displaying battery health...${RESET}"
-upower -i /org/freedesktop/UPower/devices/battery_BAT0
-# grep the cycle count 
 
 #
 lsblk -d -e 7
-read -p "${BOLD}Please specify the drive you want analyzed:${RESET}" drive
-echo -e "${BOLD}Displaying SMART values...${RESET}"
-sudo smartctl -a /dev/$drive
-# grep the percentage used, if under 50% green, if 50%-90% yellow, 90%-100% red
+read -p "Please specify the drive you want analyzed:" drive
+echo -e "${BOLD}Checking SMART values...${RESET}"
+sudo smartctl -a /dev/$drive >> $LOGPATH
+driveuse=$(grep "Percentage Used" $LOGPATH)
+echo -e "$driveuse$"
 
-echo -e "${GREEN}${$BOLD}Done!${RESET}"
+#
+echo -e "${BOLD}Checking battery health...${RESET}"
+battery=$(upower -e | grep battery)
+upower -i $battery >> $LOGPATH
+cycle=$(grep charge-cycle $LOGPATH)
+echo -e "$cycle"
+
+
+echo -e "${GREEN}${BOLD}Done!${RESET}"
 
 
 

@@ -12,28 +12,29 @@ RESET="\e[0m"
 LOGPATH="/tmp/benchmark.log"
 
 echo -e "${BLUE}${BOLD}Script is running, logs can be found in $LOGPATH ${RESET}"
-#
+
+# Runs stress-ng with unattended answers
 echo -e "${BOLD}Running multi-core CPU test...${RESET}"
 phoronix-test-suite batch-benchmark stress-ng <<EOF > $LOGPATH
 1
 EOF
 
-#
+# Runs mbw with unattended answers
 echo -e "${BOLD}Running RAM test...${RESET}"
 phoronix-test-suite batch-benchmark mbw <<EOF >> $LOGPATH
 1
 4
 EOF
 
-#
+# Displays drives on the device and prompts user for the drive desired.
 lsblk -d -e 7
 read -p "Please specify the drive you want analyzed:" drive
 echo -e "${BOLD}Checking SMART values...${RESET}"
 sudo smartctl -a /dev/$drive >> $LOGPATH
 driveuse=$(grep "Percentage Used" $LOGPATH)
-echo -e "$driveuse$"
+echo -e "$driveuse$" # Displays life of the drive
 
-#
+# Checks battery history, displays amount of charging cycles.
 echo -e "${BOLD}Checking battery health...${RESET}"
 battery=$(upower -e | grep battery)
 upower -i $battery >> $LOGPATH
@@ -42,9 +43,3 @@ echo -e "$cycle"
 
 
 echo -e "${GREEN}${BOLD}Done!${RESET}"
-
-
-
-# Potential commands
-# ------------------
-# executive-summary

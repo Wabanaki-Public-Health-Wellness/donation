@@ -32,7 +32,7 @@ read -p "Please specify the drive you want analyzed:" drive
 echo -e "${BOLD}Checking SMART values...${RESET}"
 sudo smartctl -a /dev/$drive >> $LOGPATH
 driveuse=$(grep "Percentage Used" $LOGPATH)
-echo -e "$driveuse$" # Displays life of the drive
+echo -e "$driveuse" # Displays life of the drive
 
 # Checks battery history, displays amount of charging cycles.
 echo -e "${BOLD}Checking battery health...${RESET}"

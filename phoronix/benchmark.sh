@@ -36,7 +36,6 @@ upower -i /org/freedesktop/UPower/devices/battery_BAT0
 #
 lsblk -d -e 7
 read -p "${BOLD}Please specify the drive you want analyzed:${RESET}" drive
-
 echo -e "${BOLD}Displaying SMART values...${RESET}"
 sudo smartctl -a /dev/$drive
 # grep the percentage used, if under 50% green, if 50%-90% yellow, 90%-100% red

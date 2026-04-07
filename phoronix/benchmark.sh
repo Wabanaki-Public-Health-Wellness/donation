@@ -28,7 +28,14 @@ EOF
 
 # Displays drives on the device and prompts user for the drive desired.
 lsblk -d -e 7
-read -p "Please specify the drive you want analyzed:" drive
+while true; do
+    read -p "Please specify the drive you want analyzed (sda, nvme0n1, etc.):" drive
+    if [ -b "/dev/$drive" ]; then
+        break
+    else
+        echo -e "${RED}${BOLD}Invalid drive${RESET}"
+    fi
+done
 echo -e "${BOLD}Checking SMART values...${RESET}"
 sudo smartctl -a /dev/$drive >> $LOGPATH
 driveuse=$(grep "Percentage Used" $LOGPATH)
@@ -42,4 +49,4 @@ cycle=$(grep charge-cycle $LOGPATH)
 echo -e "$cycle"
 
 
-echo -e "${GREEN}${BOLD}Done!${RESET}"
+echo -e "${GREEN}${BOLD}Done! Further information can be found in the log file.${RESET}"

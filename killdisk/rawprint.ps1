@@ -1,11 +1,10 @@
-# Author: Dylan Haughton
-# Revision: 3/30/26
+# Revision: 4/10/26
 # Description: Script to utilize the RAW printing port of a printer.
 
 $printerIP = "192.168.131.8"
 $port = 9100
-$inputFolder = "D:\certificates"
-$archiveFolder = "D:\archive"
+$inputFolder = "X:\certificates"
+$archiveFolder = "X:\archive"
 
 # Opens and closes a connection to the printer.
 function SendPDF {
@@ -28,9 +27,15 @@ function SendPDF {
     $client.Close()
 }
 
+Write-Host "Running rawprinting... Certs will be automatically printed when generated..."
+
 # Creates archive folder if not detected.
 if(!(Test-Path $archiveFolder)) {
     New-Item -ItemType Directory -Path $archiveFolder | Out-Null
+}
+# Creates certificate folder if not detected.
+if(!(Test-Path $inputFolder)) {
+    New-Item -ItemType Directory -Path $inputFolder | Out-Null
 }
 
 # Loops to check if any new sanit. certs are in the certs folder, sends it to the printer and then moves it to the archive folder.

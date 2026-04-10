@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Author: Dylan Haughton
 # Revision: 4/3/2026
 # Description: Benchmarking script to streamline use of phoronix testing suite.
 

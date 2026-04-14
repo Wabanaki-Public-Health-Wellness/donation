@@ -20,7 +20,7 @@ EOF
 
 # Runs stress-ng single-core with unattended answers
 echo -e "${BOLD}Running single-core CPU test...${RESET}"
-for (i=0; i<$(nproc); i++); do
+for ((i=0; i<$(nproc); i++)); do
     echo "Testing core $i..."
     taskset -c $i phoronix-test-suite batch-benchmark stress-ng << EOF | awk '/Test 1 of 1/,0' >> $LOGPATH
 1

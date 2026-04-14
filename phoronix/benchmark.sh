@@ -12,11 +12,20 @@ LOGPATH="/tmp/benchmark.log"
 
 echo -e "${BLUE}${BOLD}Script is running, logs can be found in $LOGPATH ${RESET}"
 
-# Runs stress-ng with unattended answers
+# Runs stress-ng multi-core with unattended answers
 echo -e "${BOLD}Running multi-core CPU test...${RESET}"
 phoronix-test-suite batch-benchmark stress-ng <<EOF > $LOGPATH
 1
 EOF
+
+# Runs stress-ng single-core with unattended answers
+echo -e "${BOLD}Running single-core CPU test...${RESET}"
+for (i=0; i<$(nproc); i++); do
+    echo "Testing core $i..."
+    taskset -c $i phoronix-test-suite batch-benchmark stress-ng << EOF | awk '/Test 1 of 1/,0' >> $LOGPATH
+1
+EOF
+done
 
 # Runs mbw with unattended answers
 echo -e "${BOLD}Running RAM test...${RESET}"

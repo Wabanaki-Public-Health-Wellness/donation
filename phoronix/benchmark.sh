@@ -47,14 +47,18 @@ done
 echo -e "${BOLD}Checking SMART values...${RESET}"
 sudo smartctl -a /dev/$drive >> $LOGPATH
 driveuse=$(grep "Percentage Used" $LOGPATH)
-echo -e "$driveuse" # Displays life of the drive
+driveread=$(grep "Data Units Read" $LOGPATH)
+drivewrite=$(grep "Data Units Written" $LOGPATH)
+echo -e "$driveuse\n$driveread\n$drivewrite" # Displays life of the drive
 
 # Checks battery history, displays amount of charging cycles.
 echo -e "${BOLD}Checking battery health...${RESET}"
 battery=$(upower -e | grep battery)
 upower -i $battery >> $LOGPATH
 cycle=$(grep charge-cycle $LOGPATH)
-echo -e "$cycle"
+capacity=$(grep capacity $LOGPATH)
+echo -e "$cycle\n$capacity"
+
 
 
 echo -e "${GREEN}${BOLD}Done! Further information can be found in the log file.${RESET}"
